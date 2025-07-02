@@ -9,16 +9,15 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", { email, password });
-      localStorage.setItem("token", res.data.token);
-      navigate("/");
-    } catch (err) {
-      alert("Signup failed");
-    }
-  };
+ const handleSignup = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.post("http://localhost:5000/user/signup", { email, password });
+    navigate("/login"); // ✅ Redirect to login only
+  } catch (err) {
+    alert(err.response?.data?.error || "Signup failed");
+  }
+};
 
   return (
     <div className="flex justify-center items-center h-screen">
