@@ -8,15 +8,34 @@ const Login = () => {
   const navigate = useNavigate();
 
  const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post("http://localhost:5000/user/login", { email, password });
-    localStorage.setItem("token", res.data.token); // ✅ Save token after successful login
-    navigate("/"); // ✅ Redirect to dashboard
-  } catch (err) {
-    alert(err.response?.data?.error || "Login failed");
+  e.preventDefault(); // ✅ Important to prevent form reload
+
+  const res = await axios.post(
+  "http://localhost:5000/user/login",
+  { email, password },
+  {
+    withCredentials: true, // ✅ Required for cookies
+    headers: {
+      "Content-Type": "application/json",
+    },
   }
+);
+
+  
+  const data = await res.json();
+  if (!res.ok) {
+    console.log("Login error:", data.error);
+    alert(data.error);
+    return;
+  }
+
+  console.log("Login successful, token:", data.token);
+  // Optional: localStorage.setItem("token", data.token);
+  // navigate("/dashboard"); // if you have dashboard route
 };
+
+
+
   return (
     <div className="flex justify-center items-center h-screen">
       <form className="bg-white p-6 rounded shadow-md w-80" onSubmit={handleLogin}>
