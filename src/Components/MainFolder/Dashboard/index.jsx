@@ -1,109 +1,66 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
+const Dashboard = () => {
+  const [coins, setCoins] = useState([]);
+  const [totalValue, setTotalValue] = useState(0);
+  const navigate = useNavigate();
 
-// const Dashboard = () => {
-//   const [holdings, setHoldings] = useState([]);
-//   const [coinId, setCoinId] = useState("");
-//   const [symbol, setSymbol] = useState("");
-//   const [amount, setAmount] = useState("");
-//   const [buyPrice, setBuyPrice] = useState("");
-//   const [prices, setPrices] = useState({});
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/portfolio", {
+          withCredentials: true,
+        });
 
-//   const token = localStorage.getItem("token");
+        setCoins(res.data.coins);
 
-//   const fetchHoldings = async () => {
-//     const res = await axios.get("http://localhost:5000/api/portfolio/my", {
-//       headers: { Authorization: token },
-//     });
-//     setHoldings(res.data);
-//   };
+        const total = res.data.coins.reduce((acc, coin) => {
+          return acc + coin.currentPrice * coin.quantity;
+        }, 0);
 
-//   const fetchPrices = async () => {
-//     const ids = holdings.map((h) => h.coinId).join(",");
-//     if (!ids) return;
-//     const res = await axios.get(
-//       `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
-//     );
-//     setPrices(res.data);
-//   };
+        setTotalValue(total);
+      } catch (error) {
+        console.error("Failed to load portfolio:", error);
+        alert("Please login again");
+        navigate("/login");
+      }
+    };
 
-//   const handleAdd = async (e) => {
-//     e.preventDefault();
-//     await axios.post(
-//       "http://localhost:5000/api/portfolio/add",
-//       { coinId, symbol, amount, buyPrice },
-//       { headers: { Authorization: token } }
-//     );
-//     setCoinId("");
-//     setSymbol("");
-//     setAmount("");
-//     setBuyPrice("");
-//     fetchHoldings();
-//   };
+    fetchPortfolio();
+  }, []);
 
-//   useEffect(() => {
-//     fetchHoldings();
-//   }, []);
-
-//   useEffect(() => {
-//     fetchPrices();
-//   }, [holdings]);
-
-//   return (
-//     <div className="p-6">
-//       <h1 className="text-2xl mb-4">Your Portfolio</h1>
-//       <form onSubmit={handleAdd} className="mb-6 space-y-2">
-//         <input placeholder="Coin ID (e.g. bitcoin)" value={coinId} onChange={(e) => setCoinId(e.target.value)} className="p-2 border rounded w-full" />
-//         <input placeholder="Symbol (e.g. BTC)" value={symbol} onChange={(e) => setSymbol(e.target.value)} className="p-2 border rounded w-full" />
-//         <input placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} className="p-2 border rounded w-full" />
-//         <input placeholder="Buy Price (USD)" value={buyPrice} onChange={(e) => setBuyPrice(e.target.value)} className="p-2 border rounded w-full" />
-//         <button className="bg-blue-600 text-white px-4 py-2 rounded">Add Coin</button>
-//       </form>
-
-//       <table className="w-full text-left">
-//         <thead>
-//           <tr>
-//             <th className="border p-2">Symbol</th>
-//             <th className="border p-2">Amount</th>
-//             <th className="border p-2">Buy Price</th>
-//             <th className="border p-2">Current Price</th>
-//             <th className="border p-2">Value (USD)</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {holdings.map((h) => (
-//             <tr key={h._id}>
-//               <td className="border p-2">{h.symbol.toUpperCase()}</td>
-//               <td className="border p-2">{h.amount}</td>
-//               <td className="border p-2">${h.buyPrice}</td>
-//               <td className="border p-2">${prices[h.coinId]?.usd || "-"}</td>
-//               <td className="border p-2">${(prices[h.coinId]?.usd * h.amount || 0).toFixed(2)}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-
-
-
-
-
-
-
-     
-
-import React from 'react'
-
-function index() {
   return (
-    <div>index</div>
-  )
-}
+    <div className="min-h-screen p-6 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-4">📊 Crypto Portfolio Dashboard</h1>
 
-export default index
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <h2 className="text-xl font-semibold">Total Portfolio Value</h2>
+        <p className="text-2xl text-green-600">${totalValue.toFixed(2)}</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {coins.map((coin) => (
+          <div key={coin._id} className="bg-white p-4 rounded shadow">
+            <h3 className="text-lg font-bold">{coin.name} ({coin.symbol})</h3>
+            <p>Quantity: {coin.quantity}</p>
+            <p>Buy Price: ${coin.buyPrice}</p>
+            <p>Current Price: ${coin.currentPrice}</p>
+            <p className={`font-semibold ${coin.currentPrice > coin.buyPrice ? "text-green-600" : "text-red-500"}`}>
+              P/L: ${(coin.currentPrice - coin.buyPrice) * coin.quantity}
+            </p>
+            <button
+              onClick={() => navigate(`/edit/${coin._id}`)}
+              className="mt-2 bg-blue-500 text-white px-4 py-1 rounded"
+            >
+              Edit
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

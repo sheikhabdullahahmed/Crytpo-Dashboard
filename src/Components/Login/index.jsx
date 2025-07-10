@@ -8,30 +8,32 @@ const Login = () => {
   const navigate = useNavigate();
 
  const handleLogin = async (e) => {
-  e.preventDefault(); // ✅ Important to prevent form reload
+  e.preventDefault();
 
-  const res = await axios.post(
-  "http://localhost:5000/user/login",
-  { email, password },
-  {
-    withCredentials: true, // ✅ Required for cookies
-    headers: {
-      "Content-Type": "application/json",
-    },
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/user/login",
+      { email, password },
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = res.data;
+    console.log("Login successful:", data);
+
+    alert(data.message); // optional
+
+    // ✅ Navigate after successful login
+    navigate("/"); // 👈 Change route if needed
+
+  } catch (err) {
+    console.error("Login failed:", err.response?.data?.error || err.message);
+    alert(err.response?.data?.error || "Login failed");
   }
-);
-
-  
-  const data = await res.json();
-  if (!res.ok) {
-    console.log("Login error:", data.error);
-    alert(data.error);
-    return;
-  }
-
-  console.log("Login successful, token:", data.token);
-  // Optional: localStorage.setItem("token", data.token);
-  // navigate("/dashboard"); // if you have dashboard route
 };
 
 

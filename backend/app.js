@@ -1,8 +1,9 @@
+require("dotenv").config(); // ✅ Load .env first
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config(); // ✅ Load .env first
 
+const portfolioRoutes = require("./Models/routes/portroutes");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./Models/routes/authRoutes");
 const app = express();
@@ -15,7 +16,7 @@ app.use(cors({
 
 const User = require("./Models/User");
 const jwt = require("jsonwebtoken");
-JWT_SECRET="supersecretkey1kkkkmmmm23636748#Y4ytt8"
+// JWT_SECRET="supersecretkey1kkkkmmmm23636748#Y4ytt8"
 
 
 // Debug log
@@ -37,22 +38,12 @@ async function connectDB() {
 connectDB();
 
 
-const auth = (req, res, next) => {
-  const token = req.cookies.token; // ✅ Get token from cookie
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    res.status(401).json({ error: "Invalid token" });
-  }
-};
 
-module.exports = auth;
+
 
 app.use("/user", authRoutes);
+app.use("/api", portfolioRoutes)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
