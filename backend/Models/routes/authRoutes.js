@@ -99,6 +99,12 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
+if (!req.cookies.token) {
+  return res.status(401).json({ error: "Please login first to reset password" });
+}
+
+
+
     await transporter.sendMail({
       from: `"Crypto Portfolio" <${process.env.EMAIL_USER}>`,
       to: email,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
@@ -7,8 +7,13 @@ import ResetPassword from "./Components/ResetPassword";
 import DashboardLayout from "./Layout/Dashboard";
 import Profile from "./Pages/Profile";
 import HomePage from "./Pages/Home";
+import "./App.css"; // Apni CSS file import karo
 
 function App() {
+  
+  // Apply dark mode to body whenever state changes
+  
+
   return (
     <Router>
       <Routes>
