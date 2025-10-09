@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import DarkMode from "./DarkMode";
+import axios from "axios";
+
 
 export default function Navbar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,11 +27,20 @@ export default function Navbar({ user }) {
   }, [darkMode, menuOpen]);
 
   // 🚪 Logout
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:5000/logout", {}, { withCredentials: true });
 
+      // Local data remove
+      // localStorage.removeItem("user");
+
+      // Navigate to login
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout error:", err);
+      alert("Logout failed. Please try again.");
+    }
+  };
   return (
     <header className="flex justify-between items-center py-4 px-6 bg-white dark:bg-gray-900 dark:text-white shadow">
       <p className="text-2xl font-bold uppercase tracking-wide">

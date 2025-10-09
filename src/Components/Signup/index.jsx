@@ -215,7 +215,7 @@ const Signup = () => {
         {/* Button */}
         <button
           type="submit"
-          className="w-full flex justify-center md:my-4 font-semibold items-center gap-2 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition-all"
+          className="w-full flex justify-center md:my-4 my-4 font-semibold items-center gap-2 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition-all"
         >
           Sign up to claim $10 <FaGift className="text-yellow-400 animate-bounce" />
         </button>

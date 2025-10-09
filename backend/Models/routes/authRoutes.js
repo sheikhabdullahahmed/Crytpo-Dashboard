@@ -66,6 +66,7 @@ router.post("/login", async (req, res) => {
 
 
 // Forgot Password
+
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   // console.log(req.body);
@@ -75,9 +76,9 @@ router.post("/forgot-password", async (req, res) => {
     if (!user) return res.status(400).json({ error: "User not found" });
 
     // Pehle check karo existing token ka
-    if (user.resetToken && user.resetTokenExpiry > Date.now()) {
-      return res.status(400).json({ error: "Reset link already sent. Please check your email." });
-    }
+    // if (user.resetToken && user.resetTokenExpiry > Date.now()) {
+    //   return res.status(400).json({ error: "Reset link already sent. Please check your email." });
+    // }
 
     // Ab naya token banao
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -98,10 +99,10 @@ router.post("/forgot-password", async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
+    
 
-if (!req.cookies.token) {
-  return res.status(401).json({ error: "Please login first to reset password" });
-}
+
+
 
 
 
@@ -158,6 +159,21 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 });
 
+
+
+
+
+
+
+router.post("/verify", (req, res) => {
+  const { walletAddress } = req.body;
+
+  // TODO: Signature verification logic
+  // abhi simple store kar lo
+  console.log("Wallet verified:", walletAddress);
+
+  res.json({ message: "Wallet verified successfully", walletAddress });
+});
 
 
 

@@ -8,6 +8,9 @@ import DashboardLayout from "./Layout/Dashboard";
 import Profile from "./Pages/Profile";
 import HomePage from "./Pages/Home";
 import "./App.css"; // Apni CSS file import karo
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import WalletLogin from './Components/WalletLogin/index'
 
 function App() {
   
@@ -16,6 +19,7 @@ function App() {
 
   return (
     <Router>
+         <ToastContainer />
       <Routes>
         {/* 🔹 Auth Routes */}
         <Route path="/" element={<Navigate to="/signup" replace />} />
@@ -23,6 +27,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/WalletLogin" element={<WalletLogin />} />
+
 
         {/* 🔹 Dashboard Layout (Navbar + Sidebar) */}
         <Route path="/user" element={<DashboardLayout />}>
