@@ -32,7 +32,6 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-
     const user = await User.findOne({ email });
 
     if (!user) return res.status(400).json({ error: "Invalid credentials" });
@@ -47,7 +46,7 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-       sameSite: "Lax",
+      sameSite: "Lax",
       maxAge: 60 * 60 * 1000,
     });
 
@@ -60,10 +59,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 });
-
-
-
-
 
 // Forgot Password
 
@@ -99,12 +94,6 @@ router.post("/forgot-password", async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
-    
-
-
-
-
-
 
     await transporter.sendMail({
       from: `"Crypto Portfolio" <${process.env.EMAIL_USER}>`,
@@ -124,10 +113,6 @@ router.post("/forgot-password", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
- 
-
-
-
 
 router.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
@@ -141,14 +126,14 @@ router.post("/reset-password/:token", async (req, res) => {
     const user = await User.findOne({
       _id: decoded.id,
       resetToken: req.params.token,
-      resetTokenExpiry: { $gt: Date.now() }
+      resetTokenExpiry: { $gt: Date.now() },
     });
     if (!user) return res.status(400).json({ error: "User not found" });
 
     // Hash password update
     // const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = newPassword;
-     user.resetToken = null;
+    user.resetToken = null;
     user.resetTokenExpiry = null;
     await user.save();
 
@@ -175,13 +160,6 @@ router.post("/verify", (req, res) => {
   res.json({ message: "Wallet verified successfully", walletAddress });
 });
 
-
-
-
-
-
-
-
 router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -190,6 +168,5 @@ router.post("/logout", (req, res) => {
   });
   res.json({ message: "Logged out successfully" });
 });
-
 
 module.exports = router;

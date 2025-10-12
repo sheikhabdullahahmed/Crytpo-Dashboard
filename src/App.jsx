@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from "react";
+// src/App.jsx
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import ForgotPassword from "./Components/ForgetPass";
 import ResetPassword from "./Components/ResetPassword";
-import DashboardLayout from "./Layout/Dashboard";
-import Profile from "./Pages/Profile";
-import HomePage from "./Pages/Home";
-import "./App.css"; // Apni CSS file import karo
+import Home from './Pages/Home'
+// import WalletLogin from './Components/WalletLogin/index';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import WalletLogin from './Components/WalletLogin/index'
+import "./App.css";
 
 function App() {
-  
-  // Apply dark mode to body whenever state changes
-  
-
   return (
-    <Router>
-         <ToastContainer />
-      <Routes>
-        {/* 🔹 Auth Routes */}
-        <Route path="/" element={<Navigate to="/signup" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/WalletLogin" element={<WalletLogin />} />
+      <Router>
+        <ToastContainer 
+          theme="dark" 
+          position="top-right"
+          autoClose={3000}
+        />
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/" element={<Navigate to="/signup" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          {/* <Route path="/wallet-login" element={<WalletLogin />} /> */}
 
 
-        {/* 🔹 Dashboard Layout (Navbar + Sidebar) */}
-        <Route path="/user" element={<DashboardLayout />}>
-          <Route path="profile" element={<Profile />} />
-          <Route path="home" element={<HomePage />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* {baki routes} */}
+          <Route path="/home" element={<Home />} />
+
+
+
+        </Routes>
+      </Router>
   );
 }
 

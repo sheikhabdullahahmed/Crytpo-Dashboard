@@ -1,52 +1,33 @@
-// routes/home.js
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const User = require("../../Models/User");
-
+const User = require("../User");
 const router = express.Router();
 
-function authMiddleware(req, res, next) {
-  // console.log("Cookies received:", req.cookies); 
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
-
+router.get("/me", async (req, res) => {
   try {
+    // ✅ Token cookie se lo (na ke headers se)
+    const token = req.cookies?.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    // ✅ Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log("Decoded JWT:", decoded); // 👈 check karo
-    req.userId = decoded.id;
-    next();
+
+    // ✅ User find karo (password exclude karke)
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Send user data
+    res.json(user);
   } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
+    console.error(err);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
-}
-
-
-
-
-
-// uid kay lia
-router.get("/user",authMiddleware , async (req, res) => {
-  const user = await User.findById(req.userId);
-  res.json({ message: "Welcome to Dashboard", user });
 });
 
-
-
-
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

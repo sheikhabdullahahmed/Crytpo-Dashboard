@@ -1,37 +1,33 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { FaEnvelopeOpenText, FaLockOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { API } from "../../api/index";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    
     try {
-      const res = await axios.post(
-        "http://localhost:5000/forgot-password",
-        { email },
-        { withCredentials: true }
-      );
+      const res = await API.post("/forgot-password", { email });
 
       toast.success(res.data.message || "Password reset link sent!", {
         position: "top-right",
         autoClose: 3000,
         theme: "dark",
       });
+      
+      setEmail(""); // Clear input
     } catch (err) {
-      if (err.response?.status === 401) {
-        toast.error("Please login first to reset password", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(err.response?.data?.error || "Something went wrong", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
+      toast.error(err.response?.data?.error || "Something went wrong", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,14 +54,16 @@ const ForgotPassword = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full flex justify-center font-semibold items-center gap-2 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition-all"
+          disabled={loading}
+          className="w-full flex justify-center font-semibold items-center gap-2 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition-all disabled:opacity-50"
         >
-          Send Reset Link
+          {loading ? "Sending..." : "Send Reset Link"}
         </button>
       </form>
     </div>

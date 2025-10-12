@@ -30,7 +30,7 @@ const Login = () => {
       });
 
       setTimeout(() => {
-        navigate("/user");
+        navigate("/home");
       }, 2500);
     } catch (err) {
       // ❌ Error Toast

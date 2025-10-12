@@ -87,3 +87,33 @@ input:checked + .slider {
   border-radius: 50%;
 }
 
+
+/* Ticker Animation */
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-content {
+  display: flex;
+  animation: ticker 30s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  flex-shrink: 0;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-wrapper:hover .ticker-content {
+  animation-play-state: paused;
+}
