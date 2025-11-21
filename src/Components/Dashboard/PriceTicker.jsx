@@ -6,21 +6,29 @@ const PriceTicker = () => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      try {
-        const response = await fetch(
-          'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
-        );
-        const data = await response.json();
-        setCoins(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching prices:', error);
-        setLoading(false);
-      }
-    };
+  try {
+    const response = await fetch('http://localhost:5000/prices');
+    const data = await response.json();
+    // console.log("Fetched data:", data);
+
+    if (Array.isArray(data)) {
+      setCoins(data);
+    } else {
+      console.error("Unexpected data format:", data);
+      setCoins([]); // prevent error
+    }
+
+    setLoading(false);
+  } catch (error) {
+    console.error("Error fetching prices:", error);
+    // setCoins([]);
+    // setLoading(false);
+  }
+};
+
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 30000);
+    const interval = setInterval(fetchPrices, 300000);
     return () => clearInterval(interval);
   }, []);
 
@@ -28,7 +36,7 @@ const PriceTicker = () => {
     return (
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-3 overflow-hidden">
         <div className="animate-pulse flex gap-6 px-4">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 9, 10].map((i) => (
             <div key={i} className="flex items-center gap-2">
               <div className="w-20 h-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
             </div>
@@ -59,7 +67,7 @@ const PriceTicker = () => {
                   ? 'text-green-600 dark:text-green-400'
                   : 'text-red-600 dark:text-red-400'
               }`}>
-                {coin.price_change_percentage_24h >= 0 ? '↗' : '↘'}
+                {coin.price_change_percentage_24h >= 0 ? '▲' : '▼'}
                 {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
               </span>
             </div>

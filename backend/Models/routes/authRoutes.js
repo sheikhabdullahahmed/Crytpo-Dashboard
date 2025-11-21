@@ -7,6 +7,8 @@ const nodemailer = require("nodemailer");
 const router = express.Router();
 
 // ✅ Let Mongoose middleware handle hashing
+
+
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -59,6 +61,38 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Express
+
+// bataya ga user login ha ya nhi 
+router.get("/verify",  (req, res) => {
+  const token = req.cookies?.token;
+  if (!token) return res.status(401).json({ loggedIn: false });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ loggedIn: true, user: decoded });
+  } catch (err) {
+    res.status(403).json({ loggedIn: false });
+  }
+});
+
+
+
+
+
 
 // Forgot Password
 

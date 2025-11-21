@@ -2,8 +2,9 @@ require("dotenv").config(); // ✅ Load .env first
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
-const cookieParser = require("cookie-parser");
+const newsRoutes = require('./Models/routes/newsroutes');
+const cookieParser = require("cookie-parser");  
+const axios = require("axios");
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,11 @@ app.use(
   })
 );
 
+
+
+
+
+// https://buildestate.vercel.app/signup 
 
 
 const authRoutes = require("./Models/routes/authRoutes");
@@ -38,6 +44,8 @@ connectDB();
 
 app.use("/", authRoutes);
 app.use("/", meRoute);
+app.use('/', newsRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

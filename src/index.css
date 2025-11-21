@@ -117,3 +117,18 @@ input:checked + .slider {
 .ticker-wrapper:hover .ticker-content {
   animation-play-state: paused;
 }
+
+
+
+
+
+
+
+
+@keyframes star-glow {
+  0%, 100% { filter: drop-shadow(0 0 2px #facc15); }
+  50% { filter: drop-shadow(0 0 6px #facc15); }
+}
+.group:hover .text-yellow-400 {
+  animation: star-glow 1s infinite alternate;
+}

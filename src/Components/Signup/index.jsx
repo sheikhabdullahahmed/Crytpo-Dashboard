@@ -14,8 +14,7 @@ import {
   FaTimes,
   FaCheckCircle,
 } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {  toast } from "react-toastify";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -171,7 +170,7 @@ const Signup = () => {
       onBlur={() => setIsFocused(false)}
     />
 
-    {/* Eye Toggle */}
+    {/* Eye Toggle */}      
     <div
       className="absolute right-3 top-3 cursor-pointer text-gray-600"
       onClick={() => setShowPassword(!showPassword)}
@@ -262,7 +261,6 @@ const Signup = () => {
       </form>
 
       {/* ✅ Toast Container */}
-      <ToastContainer />
     </div>
   );
 };
